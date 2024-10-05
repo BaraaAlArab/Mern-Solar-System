@@ -20,7 +20,7 @@ function FeedbackSection(ServiceId) {
     }
 
     try {
-      const res = await fetch("/server/feedback/create", {
+      const res = await fetch("/Server/feedback/createFeedback", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

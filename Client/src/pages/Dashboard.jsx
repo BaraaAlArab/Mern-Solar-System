@@ -4,11 +4,13 @@ import Dash_Sidebar from "../Component/Dash_Sidebar";
 import DashProfile from "../Component/DashProfile";
 import DashPost from "../Component/DashPost";
 import DashUser from "../Component/DashUser";
-import DashFeedback from "../Component/DashFeedback";
+import Feedback from "../Component/Feedback";
+import CreatePost from "../pages/CreatePost";
 
 export default function Dashboard() {
   const location = useLocation();
   const [tab, setTab] = useState("");
+
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const tabFromUrl = urlParams.get("tab");
@@ -20,18 +22,19 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
       <div className="md:w-56">
-        {/* Sidebar */}
         <Dash_Sidebar />
       </div>
-      {/* profile... */}
-      {tab === "DashPost" && <DashProfile />}
-      {/* posts... */}
-      {tab === "DashPost" && <DashPost />}
-      {/* users */}
-      {tab === "DashUser" && <DashUser />}
-      {/* comments  */}
-      {tab === "DashFeedback" && <DashFeedback />}
-      {/* dashboard comp */}
+      <div className="flex-1">
+        {tab === "DashProfile" && <DashProfile />}
+
+        {tab === "DashPost" && <DashPost />}
+
+        {tab === "DashUser" && <DashUser />}
+
+        {tab === "Feedback" && <Feedback />}
+
+        {tab === "CreatePost" && <CreatePost />}
+      </div>
     </div>
   );
 }

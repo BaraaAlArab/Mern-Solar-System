@@ -1,12 +1,17 @@
 import Post from "../models/Post.js";
-import errorHandler from "../Utils/errors.js";
+import {errorHandler} from "../Utils/errors.js";
 
 export const createPost = async (req, res, next) => {
   try {
     if (!req.user.isAdmin) {
       return next(errorHandler(403, "You are not an admin"));
     }
-    if (!req.body.title || !req.body.content) {
+    if (
+      !req.body.title ||
+      !req.body.description ||
+      !req.body.price ||
+      !req.body.image
+    ) {
       return next(errorHandler(400, "Please provide all required fields"));
     }
 
@@ -18,9 +23,11 @@ export const createPost = async (req, res, next) => {
 
     const newPost = new Post({
       title: req.body.title,
-      content: req.body.content,
+      description: req.body.description,
+      price: req.body.price,
+      image: req.body.image,
       slug,
-      UserId: req.user.id,
+      author: req.user.id,
     });
 
     const savedPost = await newPost.save();
@@ -30,10 +37,10 @@ export const createPost = async (req, res, next) => {
   }
 };
 
-export const getPost = async (req, res, next) => {
+export const getPosts = async (req, res, next) => {
   try {
-    const startIndex = parseInt(req.query.startIndex, 10) || 0; // Default to 0
-    const limit = parseInt(req.query.limit, 10) || 10; // Default to 10
+    const startIndex = parseInt(req.query.startIndex, 10) || 0;
+    const limit = parseInt(req.query.limit, 10) || 10;
 
     if (startIndex < 0 || limit <= 0) {
       return res.status(400).json({error: "Invalid pagination parameters."});
@@ -42,14 +49,14 @@ export const getPost = async (req, res, next) => {
     const sortDirection = req.query.order === "asc" ? 1 : -1;
 
     const filter = {
-      ...(req.query.userId && {userId: req.query.userId}),
+      ...(req.query.userId && {author: req.query.userId}),
       ...(req.query.category && {category: req.query.category}),
       ...(req.query.slug && {slug: req.query.slug}),
       ...(req.query.postId && {_id: req.query.postId}),
       ...(req.query.searchTerm && {
         $or: [
           {title: {$regex: req.query.searchTerm, $options: "i"}},
-          {content: {$regex: req.query.searchTerm, $options: "i"}},
+          {description: {$regex: req.query.searchTerm, $options: "i"}},
         ],
       }),
     };
@@ -59,7 +66,7 @@ export const getPost = async (req, res, next) => {
       .skip(startIndex)
       .limit(limit);
 
-    const totalPosts = await Post.countDocuments(filter); // Count filtered documents
+    const totalPosts = await Post.countDocuments(filter);
 
     const now = new Date();
     const oneMonthAgo = new Date(
@@ -78,17 +85,23 @@ export const getPost = async (req, res, next) => {
       lastMonthPosts,
     });
   } catch (error) {
-    console.error(error); // Log the error
-    res.status(500).json({error: "An error occurred while fetching posts."});
-    next(error);
+    console.error(error);
+    next(error); // Log and pass the error to the next middleware
   }
 };
 
 export const deletePost = async (req, res, next) => {
-  if (!req.user.isAdmin || req.user.id !== req.params.userId) {
-    return next(errorHandler(403, "You are not allowed to delete this post."));
-  }
   try {
+    const post = await Post.findById(req.params.postId);
+    if (!post) {
+      return next(errorHandler(404, "Post not found"));
+    }
+    if (!req.user.isAdmin || post.author.toString() !== req.user.id) {
+      return next(
+        errorHandler(403, "You are not allowed to delete this post."),
+      );
+    }
+
     await Post.findByIdAndDelete(req.params.postId);
     res.status(200).json("The post has been deleted");
   } catch (error) {
@@ -96,19 +109,27 @@ export const deletePost = async (req, res, next) => {
   }
 };
 
-export const UpdatePost = async (req, res, next) => {
-  if (!req.user.isAdmin || req.user.id !== req.params.userId) {
-    return next(errorHandler(403, "You are not allowed to update this post."));
-  }
+export const updatePost = async (req, res, next) => {
   try {
+    const post = await Post.findById(req.params.postId);
+    if (!post) {
+      return next(errorHandler(404, "Post not found"));
+    }
+    if (!req.user.isAdmin || post.author.toString() !== req.user.id) {
+      return next(
+        errorHandler(403, "You are not allowed to update this post."),
+      );
+    }
+
     const updatedPost = await Post.findByIdAndUpdate(
       req.params.postId,
       {
         $set: {
           title: req.body.title,
-          content: req.body.content,
+          description: req.body.description,
           category: req.body.category,
           image: req.body.image,
+          price: req.body.price,
         },
       },
       {new: true},

@@ -6,15 +6,16 @@ import Contact from "./pages/Contact";
 import Account from "./pages/Signin";
 import Create from "./pages/Signup";
 import Order from "./pages/Order";
-
 import UpdatePost from "./pages/UpdatePost";
 import ScrollToTop from "./Component/ScrollToTop";
-import Dashboard from "./pages/Dashboard";
-import PrivateRoute from "./Component/PrivateRoute";
+
 import OnlyAdminPrivateRoute from "./pages/OnlyAdminPrivateRoute";
 import CreatePost from "./pages/CreatePost";
 import PostPage from "./pages/PostPage";
-import Footer from "./Component/Footer";
+import Dashboard from "./pages/Dashboard";
+import PrivateRoute from "./Component/PrivateRoute";
+import Search from "./pages/SearchPage";
+import StorePage from "./Component/StorePage";
 
 function App() {
   return (
@@ -28,6 +29,8 @@ function App() {
           <Route path="/Account" element={<Account />} />
           <Route path="/Create" element={<Create />} />
           <Route path="/order" element={<Order />} />
+          <Route path="/Search" element={<Search />} />
+
           <Route element={<PrivateRoute />}>
             <Route path="/Dashboard" element={<Dashboard />} />
           </Route>
@@ -35,10 +38,9 @@ function App() {
             <Route path="/CreatePost" element={<CreatePost />} />
             <Route path="/UpdatePost" element={<UpdatePost />} />
           </Route>
-          <Route path="/PostPage/:id" element={<PostPage />} />
-          
+          <Route path="/store" element={<StorePage />} />
+          <Route path="/post" element={<PostPage />} />
         </Routes>
-        <Footer />
       </BrowserRouter>
     </>
   );

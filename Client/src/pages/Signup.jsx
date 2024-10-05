@@ -49,7 +49,6 @@ function Signup() {
       setShowPopup(true);
     }
   };
-
   return (
     <div className="max-w-md mx-auto p-8 md:p-12 lg:p-16 bg-white rounded-lg shadow-2xl">
       <h2 className="text-3xl font-bold mb-8 text-center">Sign up</h2>
@@ -127,6 +126,8 @@ function Signup() {
             Add your telephone number.
           </p>
         </div>
+        {error && <p className="text-red-500 text-xs italic mb-4">{error}</p>}{" "}
+        {/* Display error message */}
         <div className="flex items-center justify-between">
           <Button
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-300"

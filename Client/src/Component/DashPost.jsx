@@ -1,11 +1,11 @@
-import { Modal, Table, Button, TableCell } from "flowbite-react";
-import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { HiOutlineExclamationCircle } from "react-icons/hi";
+import {Modal, Table, Button, TableCell} from "flowbite-react";
+import {useState, useEffect} from "react";
+import {useSelector} from "react-redux";
+import {Link} from "react-router-dom";
+import {HiOutlineExclamationCircle} from "react-icons/hi";
 
 export default function DashPost() {
-  const { currentUser } = useSelector((state) => state.user);
+  const {currentUser} = useSelector((state) => state.user);
   const [posts, setPosts] = useState([]);
   const [userPosts, setUserPosts] = useState([]);
   const [showMore, setShowMore] = useState(true);
@@ -16,7 +16,7 @@ export default function DashPost() {
     const fetchPost = async () => {
       try {
         const res = await fetch(
-          `/Server/post/getPos?userId=${currentUser._id}`
+          `/Server/post/getPost?userId=${currentUser._id}`,
         );
         const data = await res.json();
 
@@ -39,7 +39,7 @@ export default function DashPost() {
     const startIndex = userPosts.length;
     try {
       const res = await fetch(
-        `/Server/post/getpost?userId=${currentUser._id}&startIndex=${startIndex}`
+        `/Server/post/getpost?userId=${currentUser._id}&startIndex=${startIndex}`,
       );
       const data = await res.json();
       if (res.ok) {
@@ -61,14 +61,14 @@ export default function DashPost() {
         `/Server/post/deletePost?postId=${postIdToDelete}`,
         {
           method: "DELETE",
-        }
+        },
       );
       const data = await res.json();
       if (!res.ok) {
         console.log(data.message);
       } else {
         setUserPosts((prev) =>
-          prev.filter((post) => post._id !== postIdToDelete)
+          prev.filter((post) => post._id !== postIdToDelete),
         );
       }
     } catch (error) {

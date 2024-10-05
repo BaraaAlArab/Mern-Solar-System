@@ -31,7 +31,7 @@ export default function Feedback({feedback, onEdit, onDelete}) {
 
   const handleSave = async () => {
     try {
-      const res = await fetch(`/Server/comment/edit/${feedback._id}`, {
+      const res = await fetch(`/Server/feedback/editFeedback/${feedback._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

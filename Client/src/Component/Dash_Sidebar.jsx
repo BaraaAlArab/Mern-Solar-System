@@ -28,7 +28,7 @@ function DashSideBar() {
   }, [location.search]);
   const handleSignout = async () => {
     try {
-      const res = await fetch("/Server/auth/Logout", {
+      const res = await fetch("/Server/auth/signout", {
         method: "POST",
       });
       const data = await res.json();
