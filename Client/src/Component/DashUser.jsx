@@ -14,7 +14,7 @@ export default function UserDash() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await fetch(`/Server/auth/getUser`);
+        const res = await fetch(`/Server/auth/getUsers`);
         const data = await res.json();
         if (res.ok) {
           setUsers(data.users);

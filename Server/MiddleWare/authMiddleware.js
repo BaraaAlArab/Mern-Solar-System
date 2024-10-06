@@ -1,4 +1,4 @@
-import JWT_Code from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import {errorHandler} from "../Utils/errors.js";
 
 export const verifyToken = async (req, res, next) => {
@@ -8,7 +8,7 @@ export const verifyToken = async (req, res, next) => {
       return next(errorHandler(401, "Unauthorized"));
     }
 
-    JWT_Code.verify(token, process.env.JWT_Code, (err, decoded) => {
+    jwt.verify(token, process.env.JWT_Code, (err, decoded) => {
       if (err) {
         return next(errorHandler(401, "Unauthorized"));
       }

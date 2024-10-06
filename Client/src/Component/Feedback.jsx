@@ -7,7 +7,7 @@ export default function Feedback({feedback, onEdit, onDelete}) {
   const [user, setUser] = useState({});
   const {currentUser} = useSelector((state) => state.user);
   const [isEditing, setIsEditing] = useState(false);
-  const [editedContent, setEditedContent] = useState(feedback.content);
+  const [editedContent, setEditedContent] = useState(feedback.message);
 
   useEffect(() => {
     const getUser = async () => {

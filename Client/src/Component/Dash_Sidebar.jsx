@@ -9,8 +9,7 @@ import {
   HiAnnotation,
   HiChartPie,
 } from "react-icons/hi";
-import {useDispatch} from "react-redux";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {Logout} from "../../redux/user/userSlice";
 
 function DashSideBar() {
@@ -46,9 +45,9 @@ function DashSideBar() {
       <Sidebar.Items>
         <Sidebar.ItemGroup className="flex flex-col gap-1">
           {currentUser && currentUser.isAdmin && (
-            <Link to="/dashboard?tab=dash">
+            <Link to="/dashboard?tab=Dashboard">
               <Sidebar.Item
-                active={tab === "dash" || !tab}
+                active={tab === "Dashboard" || !tab}
                 icon={HiChartPie}
                 as="div"
               >
@@ -56,20 +55,21 @@ function DashSideBar() {
               </Sidebar.Item>
             </Link>
           )}
-          <Link to="/dashboard?tab=profile">
+          <Link to="/Dashboard?tab=DashProfile">
             <Sidebar.Item
-              active={tab === "profile"}
+              active={tab === "DashProfile"}
               icon={HiUser}
-              label={"User"}
+              label={currentUser.isAdmin ? "admin" : "User"}
               labelColor="dark"
+              as="div"
             >
               Profile
             </Sidebar.Item>
           </Link>
           {currentUser.isAdmin && (
-            <Link to="/dashboard?tab=Post">
+            <Link to="/Dashboard?tab=DashPost">
               <Sidebar.Item
-                active={tab === "posts"}
+                active={tab === "DashPost"}
                 icon={HiDocumentText}
                 as="div"
               >
@@ -78,9 +78,9 @@ function DashSideBar() {
             </Link>
           )}
           {currentUser.isAdmin && (
-            <Link to="/dashboard?tab=users">
+            <Link to="/dashboard?tab=DashUser">
               <SidebarItem
-                active={tab === "users"}
+                active={tab === "DashUser"}
                 as="div"
                 icon={HiOutlineUserGroup}
               >
@@ -89,13 +89,13 @@ function DashSideBar() {
             </Link>
           )}
           {currentUser.isAdmin && (
-            <Link to="/dashboard?tab=comment">
+            <Link to="/dashboard?tab=Feedback">
               <SidebarItem
-                active={tab === "comment"}
+                active={tab === "Feedback"}
                 as="div"
                 icon={HiAnnotation}
               >
-                Comment
+                feedback
               </SidebarItem>
             </Link>
           )}

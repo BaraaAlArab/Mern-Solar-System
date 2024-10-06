@@ -153,7 +153,7 @@ export default function DashProfile() {
     }
     try {
       dispatch(updateStart());
-      const res = await fetch(`/api/user/update/${currentUser._id}`, {
+      const res = await fetch(`/Server/auth/update/${currentUser._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -193,25 +193,6 @@ export default function DashProfile() {
 
   return (
     <>
-      <Sidebar className="w-full md:w-56">
-        <Sidebar.Items>
-          <Sidebar.ItemGroup>
-            <Link to="/dashboard?tab=profile">
-              <Sidebar.Item
-                active={tab === "profile"}
-                icon={HiUser}
-                label={"User"}
-                labelColor="dark"
-              >
-                profile
-              </Sidebar.Item>
-            </Link>
-            <Sidebar.Item icon={HiArrowSmRight} className="cursor-pointer">
-              Sign Out
-            </Sidebar.Item>
-          </Sidebar.ItemGroup>
-        </Sidebar.Items>
-      </Sidebar>
       <div className="max-w-lg mx-auto p-3 w-full">
         <h1 className="my-7 text-center font-sans text-3x1">Profile</h1>
         <form onClick={handleSubmit} className="flex flex-col gap-4">
