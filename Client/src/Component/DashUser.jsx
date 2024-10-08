@@ -1,8 +1,5 @@
-import {Modal, Table, Button} from "flowbite-react";
 import {useEffect, useState} from "react";
 import {useSelector} from "react-redux";
-import {HiOutlineExclamationCircle} from "react-icons/hi";
-import {FaCheck, FaTimes} from "react-icons/fa";
 
 export default function UserDash() {
   const {currentUser} = useSelector((state) => state.user);
@@ -51,7 +48,7 @@ export default function UserDash() {
 
   const handleDeleteUser = async () => {
     try {
-      const res = await fetch(`Server/auth/delete/${userIdToDelete}`, {
+      const res = await fetch(`/Server/auth/delete/${userIdToDelete}`, {
         method: "DELETE",
       });
       const data = await res.json();
@@ -67,42 +64,39 @@ export default function UserDash() {
   };
 
   return (
-    <div className="table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
+    <div className="table-auto overflow-x-scroll md:mx-auto p-3">
       {currentUser?.isAdmin ? (
         users.length > 0 ? (
           <>
-            <Table hoverable className="shadow-md">
-              <Table.Head>
-                <Table.HeadCell>Date created</Table.HeadCell>
-                <Table.HeadCell>User image</Table.HeadCell>
-                <Table.HeadCell>Username</Table.HeadCell>
-                <Table.HeadCell>Email</Table.HeadCell>
-                <Table.HeadCell>Admin</Table.HeadCell>
-                <Table.HeadCell>Delete</Table.HeadCell>
-              </Table.Head>
-              {users.map((user) => (
-                <Table.Body className="divide-y" key={user._id}>
-                  <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <Table.Cell>
-                      {new Date(user.createdAt).toLocaleDateString()}
-                    </Table.Cell>
-                    <Table.Cell>
+            <table className="shadow-md bg-blue-900 text-white w-full">
+              <thead>
+                <tr>
+                  <th>Date created</th>
+                  <th>User image</th>
+                  <th>Username</th>
+                  <th>Email</th>
+                  <th>Admin</th>
+                  <th>Delete</th>
+                </tr>
+              </thead>
+              <tbody className="bg-blue-900">
+                {users.map((user) => (
+                  <tr
+                    className="bg-white dark:bg-gray-800 text-black dark:text-white"
+                    key={user._id}
+                  >
+                    <td>{new Date(user.createdAt).toLocaleDateString()}</td>
+                    <td>
                       <img
                         src={user.profilePicture}
                         alt={user.username}
                         className="w-10 h-10 object-cover bg-gray-500 rounded-full"
                       />
-                    </Table.Cell>
-                    <Table.Cell>{user.username}</Table.Cell>
-                    <Table.Cell>{user.email}</Table.Cell>
-                    <Table.Cell>
-                      {user.isAdmin ? (
-                        <FaCheck className="text-green-500" />
-                      ) : (
-                        <FaTimes className="text-red-500" />
-                      )}
-                    </Table.Cell>
-                    <Table.Cell>
+                    </td>
+                    <td>{user.username}</td>
+                    <td>{user.email}</td>
+                    <td>{user.isAdmin ? "✔" : "✘"}</td>
+                    <td>
                       <span
                         onClick={() => {
                           setShowModal(true);
@@ -112,11 +106,11 @@ export default function UserDash() {
                       >
                         Delete
                       </span>
-                    </Table.Cell>
-                  </Table.Row>
-                </Table.Body>
-              ))}
-            </Table>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
             {showMore && (
               <button
                 onClick={handleShowMore}
@@ -133,30 +127,21 @@ export default function UserDash() {
         <p>Access denied.</p>
       )}
 
-      <Modal
-        show={showModal}
-        onClose={() => setShowModal(false)}
-        popup
-        size="md"
-      >
-        <Modal.Header />
-        <Modal.Body>
-          <div className="text-center">
-            <HiOutlineExclamationCircle className="h-14 w-14 text-blue-900 dark:text-blue-900 mb-4 mx-auto" />
-            <h3 className="mb-5 text-lg text-blue-900 dark:text-blue-900">
+      {showModal && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-5 rounded-lg">
+            <h3 className="mb-5 text-lg text-blue-900">
               Are you sure you want to delete this user?
             </h3>
             <div className="flex justify-center gap-4">
-              <Button color="failure" onClick={handleDeleteUser}>
-                Yes, Im sure
-              </Button>
-              <Button color="gray" onClick={() => setShowModal(false)}>
-                No, cancel
-              </Button>
+              <button onClick={handleDeleteUser} className="text-red-500">
+                Yes, I'm sure
+              </button>
+              <button onClick={() => setShowModal(false)}>No, cancel</button>
             </div>
           </div>
-        </Modal.Body>
-      </Modal>
+        </div>
+      )}
     </div>
   );
 }
