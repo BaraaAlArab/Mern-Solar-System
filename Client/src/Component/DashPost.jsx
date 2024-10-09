@@ -17,8 +17,9 @@ export default function DashPost() {
           `/Server/post/getPost?userId=${currentUser._id}`,
           {
             method: "GET",
+            cache: "no-store", // Prevents caching behavior
             headers: {
-              "Cache-Control": "no-cache", // Prevents caching behavior
+              "Content-Type": "application/json",
             },
           },
         );
@@ -45,8 +46,9 @@ export default function DashPost() {
         `/Server/post/getpost?userId=${currentUser._id}&startIndex=${startIndex}`,
         {
           method: "GET",
+          cache: "no-store", // Prevents caching behavior
           headers: {
-            "Cache-Control": "no-cache", // Prevents caching behavior
+            "Content-Type": "application/json",
           },
         },
       );
@@ -69,7 +71,10 @@ export default function DashPost() {
         `/Server/post/deletePost?postId=${postIdToDelete}`,
         {
           method: "DELETE",
-          "Cache-Control": "no-cache", // Prevents caching behavior
+          cache: "no-store", // Prevents caching behavior
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
       );
       const data = await res.json();

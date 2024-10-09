@@ -8,6 +8,8 @@ import {
   HiOutlineUserGroup,
   HiAnnotation,
   HiChartPie,
+  HiHome,
+  HiOutlinePlus,
 } from "react-icons/hi";
 import {useDispatch, useSelector} from "react-redux";
 import {Logout} from "../../redux/user/userSlice";
@@ -104,9 +106,16 @@ function DashSideBar() {
               <SidebarItem
                 active={tab === "CreatePost"}
                 as="div"
-                icon={HiOutlineUserGroup}
+                icon={HiOutlinePlus}
               >
                 Create Post
+              </SidebarItem>
+            </Link>
+          )}
+          {currentUser.isAdmin && (
+            <Link to="/?tab=Home">
+              <SidebarItem active={tab === "Home"} as="div" icon={HiHome}>
+                Home
               </SidebarItem>
             </Link>
           )}

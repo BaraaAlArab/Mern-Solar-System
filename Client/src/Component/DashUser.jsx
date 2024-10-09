@@ -16,7 +16,7 @@ export default function DashUsers() {
       try {
         const res = await fetch(`/Server/auth/getUsers`, {
           method: "GET",
-          cache: "no-cache", // Bypass cache
+          cache: "no-store", // Bypass cache
           headers: {
             "Content-Type": "application/json",
           },
@@ -47,7 +47,7 @@ export default function DashUsers() {
         `/Server/auth/getUsers?startIndex=${startIndex}`,
         {
           method: "GET",
-          cache: "no-cache", // Bypass cache
+          cache: "no-store", // Bypass cache
           headers: {
             "Content-Type": "application/json",
           },
@@ -71,7 +71,7 @@ export default function DashUsers() {
     try {
       const res = await fetch(`/Server/auth/delete/${userIdToDelete}`, {
         method: "DELETE",
-        cache: "no-cache", // Bypass cache
+        cache: "no-store", // Bypass cache
         headers: {
           "Content-Type": "application/json",
         },

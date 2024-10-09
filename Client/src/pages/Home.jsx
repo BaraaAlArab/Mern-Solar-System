@@ -9,7 +9,12 @@ function Services() {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const res = await fetch("/Server/post/getPost");
+      const res = await fetch("/Server/post/getPost", {
+        cache: "no-store", // Bypass cache
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       const data = await res.json();
       setPosts(data.posts);
     };

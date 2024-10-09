@@ -6,7 +6,7 @@ import DashPost from "../Component/DashPost";
 import DashUser from "../Component/DashUser";
 import Feedback from "../Component/Feedback";
 import CreatePost from "../Component/CreatePost";
-
+import Home from "../pages/Home";
 export default function Dashboard() {
   const location = useLocation();
   const [tab, setTab] = useState("");
@@ -34,6 +34,7 @@ export default function Dashboard() {
         {tab === "Feedback" && <Feedback />}
 
         {tab === "CreatePost" && <CreatePost />}
+        {tab === "/" && <Home />}
       </div>
     </div>
   );
