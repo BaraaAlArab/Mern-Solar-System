@@ -5,7 +5,7 @@ import DashProfile from "../Component/DashProfile";
 import DashPost from "../Component/DashPost";
 import DashUser from "../Component/DashUser";
 import Feedback from "../Component/Feedback";
-import CreatePost from "../pages/CreatePost";
+import CreatePost from "../Component/CreatePost";
 
 export default function Dashboard() {
   const location = useLocation();

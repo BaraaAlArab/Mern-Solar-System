@@ -99,6 +99,17 @@ function DashSideBar() {
               </SidebarItem>
             </Link>
           )}
+          {currentUser.isAdmin && (
+            <Link to="/Dashboard?tab=CreatePost">
+              <SidebarItem
+                active={tab === "CreatePost"}
+                as="div"
+                icon={HiOutlineUserGroup}
+              >
+                Create Post
+              </SidebarItem>
+            </Link>
+          )}
           <Sidebar.Item
             onClick={handleSignout}
             icon={HiArrowSmRight}

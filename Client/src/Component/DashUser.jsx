@@ -1,7 +1,10 @@
+import {Modal, Table, Button} from "flowbite-react";
 import {useEffect, useState} from "react";
 import {useSelector} from "react-redux";
+import {HiOutlineExclamationCircle} from "react-icons/hi";
+import {FaCheck, FaTimes} from "react-icons/fa";
 
-export default function UserDash() {
+export default function DashUsers() {
   const {currentUser} = useSelector((state) => state.user);
   const [users, setUsers] = useState([]);
   const [showMore, setShowMore] = useState(true);
@@ -9,40 +12,58 @@ export default function UserDash() {
   const [userIdToDelete, setUserIdToDelete] = useState("");
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchUsers = async () => {
       try {
-        const res = await fetch(`/Server/auth/getUsers`);
+        const res = await fetch(`/Server/auth/getUsers`, {
+          method: "GET",
+          cache: "no-cache", // Bypass cache
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
         const data = await res.json();
         if (res.ok) {
           setUsers(data.users);
           if (data.users.length < 9) {
             setShowMore(false);
           }
+        } else {
+          console.error(data.message);
         }
       } catch (error) {
-        console.log(error.message);
+        console.error("Error fetching users:", error.message);
       }
     };
 
     if (currentUser.isAdmin) {
-      fetchUser();
+      fetchUsers();
     }
-  }, [currentUser.isAdmin, currentUser._id]);
+  }, [currentUser.isAdmin, currentUser._id]); // Added currentUser.isAdmin to dependencies
 
   const handleShowMore = async () => {
     const startIndex = users.length;
     try {
-      const res = await fetch(`/Server/auth/getUsers?startIndex=${startIndex}`);
+      const res = await fetch(
+        `/Server/auth/getUsers?startIndex=${startIndex}`,
+        {
+          method: "GET",
+          cache: "no-cache", // Bypass cache
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
       const data = await res.json();
-
       if (res.ok) {
         setUsers((prev) => [...prev, ...data.users]);
         if (data.users.length < 9) {
           setShowMore(false);
         }
+      } else {
+        console.error(data.message);
       }
     } catch (error) {
-      console.log(error.message);
+      console.error("Error fetching more users:", error.message);
     }
   };
 
@@ -50,98 +71,112 @@ export default function UserDash() {
     try {
       const res = await fetch(`/Server/auth/delete/${userIdToDelete}`, {
         method: "DELETE",
+        cache: "no-cache", // Bypass cache
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
       const data = await res.json();
       if (res.ok) {
         setUsers((prev) => prev.filter((user) => user._id !== userIdToDelete));
         setShowModal(false);
       } else {
-        console.log(data.message);
+        console.error(data.message);
       }
     } catch (error) {
-      console.log(error.message);
+      console.error("Error deleting user:", error.message);
     }
   };
 
   return (
-    <div className="table-auto overflow-x-scroll md:mx-auto p-3">
-      {currentUser?.isAdmin ? (
-        users.length > 0 ? (
-          <>
-            <table className="shadow-md bg-blue-900 text-white w-full">
-              <thead>
-                <tr>
-                  <th>Date created</th>
-                  <th>User image</th>
-                  <th>Username</th>
-                  <th>Email</th>
-                  <th>Admin</th>
-                  <th>Delete</th>
-                </tr>
-              </thead>
-              <tbody className="bg-blue-900">
-                {users.map((user) => (
-                  <tr
-                    className="bg-white dark:bg-gray-800 text-black dark:text-white"
-                    key={user._id}
-                  >
-                    <td>{new Date(user.createdAt).toLocaleDateString()}</td>
-                    <td>
-                      <img
-                        src={user.profilePicture}
-                        alt={user.username}
-                        className="w-10 h-10 object-cover bg-gray-500 rounded-full"
-                      />
-                    </td>
-                    <td>{user.username}</td>
-                    <td>{user.email}</td>
-                    <td>{user.isAdmin ? "✔" : "✘"}</td>
-                    <td>
-                      <span
-                        onClick={() => {
-                          setShowModal(true);
-                          setUserIdToDelete(user._id);
-                        }}
-                        className="font-medium text-red-500 hover:underline cursor-pointer"
-                      >
-                        Delete
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            {showMore && (
-              <button
-                onClick={handleShowMore}
-                className="w-full text-teal-500 self-center text-sm py-7"
-              >
-                Show more
-              </button>
-            )}
-          </>
-        ) : (
-          <p>You have no users yet!</p>
-        )
+    <div className="table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
+      {currentUser.isAdmin && users.length > 0 ? (
+        <>
+          <Table hoverable className="shadow-md">
+            <Table.Head>
+              <Table.HeadCell>Date Created</Table.HeadCell>
+              <Table.HeadCell>User Image</Table.HeadCell>
+              <Table.HeadCell>Username</Table.HeadCell>
+              <Table.HeadCell>Email</Table.HeadCell>
+              <Table.HeadCell>Admin</Table.HeadCell>
+              <Table.HeadCell>Delete</Table.HeadCell>
+            </Table.Head>
+            <Table.Body>
+              {users.map((user) => (
+                <Table.Row
+                  className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                  key={user._id}
+                >
+                  <Table.Cell>
+                    {new Date(user.createdAt).toLocaleDateString()}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <img
+                      src={user.profilePicture || "/default-profile.png"} // Fallback image
+                      alt={user.username}
+                      className="w-10 h-10 object-cover bg-gray-500 rounded-full"
+                    />
+                  </Table.Cell>
+                  <Table.Cell>{user.username}</Table.Cell>
+                  <Table.Cell>{user.email}</Table.Cell>
+                  <Table.Cell>
+                    {user.isAdmin ? (
+                      <FaCheck className="text-green-500" />
+                    ) : (
+                      <FaTimes className="text-red-500" />
+                    )}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <span
+                      onClick={() => {
+                        setShowModal(true);
+                        setUserIdToDelete(user._id);
+                      }}
+                      className="font-medium text-red-500 hover:underline cursor-pointer"
+                    >
+                      Delete
+                    </span>
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table>
+          {showMore && (
+            <button
+              onClick={handleShowMore}
+              className="w-full text-teal-500 self-center text-sm py-7"
+            >
+              Show More
+            </button>
+          )}
+        </>
       ) : (
-        <p>Access denied.</p>
+        <p className="text-center text-gray-500">You have no users yet!</p>
       )}
-
-      {showModal && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-5 rounded-lg">
-            <h3 className="mb-5 text-lg text-blue-900">
+      <Modal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        popup
+        size="md"
+      >
+        <Modal.Header />
+        <Modal.Body>
+          <div className="text-center">
+            <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
+            <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-400">
               Are you sure you want to delete this user?
             </h3>
             <div className="flex justify-center gap-4">
-              <button onClick={handleDeleteUser} className="text-red-500">
+              <Button color="failure" onClick={handleDeleteUser}>
                 Yes, I'm sure
-              </button>
-              <button onClick={() => setShowModal(false)}>No, cancel</button>
+              </Button>
+              <Button color="gray" onClick={() => setShowModal(false)}>
+                No, cancel
+              </Button>
             </div>
           </div>
-        </div>
-      )}
+        </Modal.Body>
+      </Modal>
     </div>
   );
 }

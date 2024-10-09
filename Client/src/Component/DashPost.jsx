@@ -15,6 +15,12 @@ export default function DashPost() {
       try {
         const res = await fetch(
           `/Server/post/getPost?userId=${currentUser._id}`,
+          {
+            method: "GET",
+            headers: {
+              "Cache-Control": "no-cache", // Prevents caching behavior
+            },
+          },
         );
         const data = await res.json();
 
@@ -37,6 +43,12 @@ export default function DashPost() {
     try {
       const res = await fetch(
         `/Server/post/getpost?userId=${currentUser._id}&startIndex=${startIndex}`,
+        {
+          method: "GET",
+          headers: {
+            "Cache-Control": "no-cache", // Prevents caching behavior
+          },
+        },
       );
       const data = await res.json();
       if (res.ok) {
@@ -46,7 +58,7 @@ export default function DashPost() {
         }
       }
     } catch (error) {
-      console.error(error.message);
+      console.error("Failed to fetch users:", error.message);
     }
   };
 
@@ -57,6 +69,7 @@ export default function DashPost() {
         `/Server/post/deletePost?postId=${postIdToDelete}`,
         {
           method: "DELETE",
+          "Cache-Control": "no-cache", // Prevents caching behavior
         },
       );
       const data = await res.json();
@@ -68,7 +81,7 @@ export default function DashPost() {
         );
       }
     } catch (error) {
-      console.error(error.message);
+      console.error("Failed to fetch users:", error.message);
     }
   };
 

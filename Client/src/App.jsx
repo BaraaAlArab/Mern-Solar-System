@@ -10,12 +10,13 @@ import UpdatePost from "./pages/UpdatePost";
 import ScrollToTop from "./Component/ScrollToTop";
 
 import OnlyAdminPrivateRoute from "./pages/OnlyAdminPrivateRoute";
-import CreatePost from "./pages/CreatePost";
+
 import PostPage from "./pages/PostPage";
 import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./Component/PrivateRoute";
 import Search from "./pages/SearchPage";
 import StorePage from "./Component/StorePage";
+import CreatePost from "./Component/CreatePost";
 
 function App() {
   return (

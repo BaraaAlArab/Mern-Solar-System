@@ -2,7 +2,7 @@ import {initializeApp} from "firebase/app";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  
+
   authDomain: "solarsystemenergy-19914.firebaseapp.com",
   projectId: "solarsystemenergy-19914",
   storageBucket: "solarsystemenergy-19914.appspot.com",
