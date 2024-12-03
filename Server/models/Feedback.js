@@ -1,20 +1,15 @@
 import mongoose from "mongoose";
 
 const feedbackSchema = new mongoose.Schema({
-  user: {
+  userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User", // Reference to the User model
+    ref: "User",
     required: true,
   },
-  message: {
+  feedback: {
     type: String,
     required: true,
-  },
-  post: {
-    // Add this field to associate feedback with a specific post
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Post", // Reference to the Post model
-    required: true, // Make it required if feedback should always be linked to a post
+    trim: true,
   },
   createdAt: {
     type: Date,

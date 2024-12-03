@@ -1,4 +1,4 @@
-import {Alert, Button, Modal, TextInput} from "flowbite-react";
+import {Alert, Button, Modal, TextInput, Textarea} from "flowbite-react";
 import "flowbite/dist/flowbite.css";
 import {useEffect, useRef, useState} from "react";
 import {useSelector} from "react-redux";
@@ -232,6 +232,7 @@ export default function DashProfile() {
           onChange={handleChange}
           className="border border-blue-900"
         />
+
         <Button
           type="submit"
           gradientDuoTone="purpleToBlue"

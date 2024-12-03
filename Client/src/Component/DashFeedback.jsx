@@ -9,11 +9,13 @@ export default function DashFeedback() {
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [feedbackIdToDelete, setFeedbackIdToDelete] = useState("");
+  const [loading, setLoading] = useState(false); // Loading state
 
   useEffect(() => {
     const fetchFeedback = async () => {
+      setLoading(true); // Set loading to true
       try {
-        const res = await fetch(`/Server/feedback/getFeedback`);
+        const res = await fetch(`/Server/feedback/getFeedbackByUserId`);
         const data = await res.json();
         if (res.ok) {
           setFeedback(data.feedback);
@@ -23,18 +25,21 @@ export default function DashFeedback() {
         }
       } catch (error) {
         console.log(error.message);
+      } finally {
+        setLoading(false); // Set loading to false
       }
     };
     if (currentUser.isAdmin) {
       fetchFeedback();
     }
-  }, [currentUser._id]);
+  }, [currentUser._id, currentUser.isAdmin]); // Added isAdmin to dependencies
 
   const handleShowMore = async () => {
     const startIndex = feedback.length;
+    setLoading(true); // Set loading to true
     try {
       const res = await fetch(
-        `/Server/feedback/getFeedback?startIndex=${startIndex}`,
+        `/Server/feedback/getFeedbackByUserId?startIndex=${startIndex}`,
       );
       const data = await res.json();
       if (res.ok) {
@@ -45,6 +50,8 @@ export default function DashFeedback() {
       }
     } catch (error) {
       console.log(error.message);
+    } finally {
+      setLoading(false); // Set loading to false
     }
   };
 
@@ -62,7 +69,6 @@ export default function DashFeedback() {
         setFeedback((prev) =>
           prev.filter((feedback) => feedback._id !== feedbackIdToDelete),
         );
-        setShowModal(false);
       } else {
         console.log(data.message);
       }
@@ -78,27 +84,30 @@ export default function DashFeedback() {
           <Table hoverable className="shadow-md">
             <Table.Head>
               <Table.HeadCell>Date updated</Table.HeadCell>
-              <Table.HeadCell>feedback content</Table.HeadCell>
+              <Table.HeadCell>Feedback content</Table.HeadCell>
               <Table.HeadCell>Number of likes</Table.HeadCell>
               <Table.HeadCell>PostId</Table.HeadCell>
               <Table.HeadCell>UserId</Table.HeadCell>
               <Table.HeadCell>Delete</Table.HeadCell>
             </Table.Head>
-            {feedback.map((feedback) => (
-              <Table.Body className="divide-y" key={feedback._id}>
-                <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+            <Table.Body className="divide-y">
+              {feedback.map((feedbackItem) => (
+                <Table.Row
+                  className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                  key={feedbackItem._id}
+                >
                   <Table.Cell>
-                    {new Date(feedback.updatedAt).toLocaleDateString()}
+                    {new Date(feedbackItem.updatedAt).toLocaleDateString()}
                   </Table.Cell>
-                  <Table.Cell>{feedback.content}</Table.Cell>
-                  <Table.Cell>{feedback.numberOfLikes}</Table.Cell>
-                  <Table.Cell>{feedback.postId}</Table.Cell>
-                  <Table.Cell>{feedback.userId}</Table.Cell>
+                  <Table.Cell>{feedbackItem.content}</Table.Cell>
+                  <Table.Cell>{feedbackItem.numberOfLikes}</Table.Cell>
+                  <Table.Cell>{feedbackItem.postId}</Table.Cell>
+                  <Table.Cell>{feedbackItem.userId}</Table.Cell>
                   <Table.Cell>
                     <span
                       onClick={() => {
                         setShowModal(true);
-                        setFeedbackIdToDelete(feedback._id);
+                        setFeedbackIdToDelete(feedbackItem._id);
                       }}
                       className="font-medium text-red-500 hover:underline cursor-pointer"
                     >
@@ -106,8 +115,8 @@ export default function DashFeedback() {
                     </span>
                   </Table.Cell>
                 </Table.Row>
-              </Table.Body>
-            ))}
+              ))}
+            </Table.Body>
           </Table>
           {showMore && (
             <button
@@ -119,8 +128,9 @@ export default function DashFeedback() {
           )}
         </>
       ) : (
-        <p>You have no comments yet!</p>
+        <p>You have no feedback yet!</p>
       )}
+      {loading && <p>Loading...</p>} {/* Loading indicator */}
       <Modal
         show={showModal}
         onClose={() => setShowModal(false)}
@@ -136,7 +146,7 @@ export default function DashFeedback() {
             </h3>
             <div className="flex justify-center gap-4">
               <Button color="failure" onClick={handleDeleteFeedback}>
-                Yes, Im sure
+                Yes, I'm sure
               </Button>
               <Button color="gray" onClick={() => setShowModal(false)}>
                 No, cancel

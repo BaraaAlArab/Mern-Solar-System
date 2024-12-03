@@ -7,9 +7,10 @@ export default function Search() {
   const [sidebarData, setSidebarData] = useState({
     searchTerm: "",
     sort: "desc",
-    category: "uncategorized",
+    category: "all", // Default category set to 'all'
   });
 
+  console.log(sidebarData);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showMore, setShowMore] = useState(false);
@@ -27,14 +28,14 @@ export default function Search() {
         ...sidebarData,
         searchTerm: searchTermFromUrl,
         sort: sortFromUrl,
-        category: categoryFromUrl,
+        category: categoryFromUrl || "all", // Default to 'all' if not found
       });
     }
 
     const fetchPosts = async () => {
       setLoading(true);
       const searchQuery = urlParams.toString();
-      const res = await fetch(`/Server/post/getPost?${searchQuery}`);
+      const res = await fetch(`/Server/post/getPosts?${searchQuery}`);
       if (!res.ok) {
         setLoading(false);
         return;
@@ -54,8 +55,17 @@ export default function Search() {
   }, [location.search]);
 
   const handleChange = (e) => {
-    const {id, value} = e.target;
-    setSidebarData((prevState) => ({...prevState, [id]: value}));
+    if (e.target.id === "searchTerm") {
+      setSidebarData({...sidebarData, searchTerm: e.target.value});
+    }
+    if (e.target.id === "sort") {
+      const order = e.target.value || "desc";
+      setSidebarData({...sidebarData, sort: order});
+    }
+    if (e.target.id === "category") {
+      const category = e.target.value || "all"; // Set 'all' as the default
+      setSidebarData({...sidebarData, category});
+    }
   };
 
   const handleSubmit = (e) => {
@@ -65,7 +75,7 @@ export default function Search() {
     urlParams.set("sort", sidebarData.sort);
     urlParams.set("category", sidebarData.category);
     const searchQuery = urlParams.toString();
-    navigate(`/SearchPage?${searchQuery}`);
+    navigate(`/search?${searchQuery}`);
   };
 
   const handleShowMore = async () => {
@@ -74,11 +84,19 @@ export default function Search() {
     const urlParams = new URLSearchParams(location.search);
     urlParams.set("startIndex", startIndex);
     const searchQuery = urlParams.toString();
-    const res = await fetch(`/Server/post/getPost?${searchQuery}`);
-    if (!res.ok) return;
-    const data = await res.json();
-    setPosts([...posts, ...data.posts]);
-    setShowMore(data.posts.length === 9);
+    const res = await fetch(`/api/post/getposts?${searchQuery}`);
+    if (!res.ok) {
+      return;
+    }
+    if (res.ok) {
+      const data = await res.json();
+      setPosts([...posts, ...data.posts]);
+      if (data.posts.length === 9) {
+        setShowMore(true);
+      } else {
+        setShowMore(false);
+      }
+    }
   };
 
   return (
@@ -118,10 +136,10 @@ export default function Search() {
               id="category"
               className="w-full"
             >
-              <option value="uncategorized">Uncategorized</option>
-              <option value="reactjs">React.js</option>
-              <option value="nextjs">Next.js</option>
-              <option value="javascript">JavaScript</option>
+              <option value="all">All</option>
+              <option value="Panels">Panels</option>
+              <option value="Batteries">Batteries</option>
+              <option value="Wires">Wires</option>
             </Select>
           </div>
           <Button

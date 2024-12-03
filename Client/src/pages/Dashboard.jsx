@@ -4,9 +4,10 @@ import Dash_Sidebar from "../Component/Dash_Sidebar";
 import DashProfile from "../Component/DashProfile";
 import DashPost from "../Component/DashPost";
 import DashUser from "../Component/DashUser";
-import Feedback from "../Component/Feedback";
-import CreatePost from "../Component/CreatePost";
 import Home from "../pages/Home";
+import DashFeedback from "../Component/DashFeedback";
+import CreatePost from "../pages/CreatePost";
+
 export default function Dashboard() {
   const location = useLocation();
   const [tab, setTab] = useState("");
@@ -31,7 +32,7 @@ export default function Dashboard() {
 
         {tab === "DashUser" && <DashUser />}
 
-        {tab === "Feedback" && <Feedback />}
+        {tab === "DashFeedback" && <DashFeedback />}
 
         {tab === "CreatePost" && <CreatePost />}
         {tab === "/" && <Home />}

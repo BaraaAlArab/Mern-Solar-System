@@ -1,18 +1,17 @@
 import express from "express";
-
-import {verifyToken} from "../MiddleWare/authMiddleware.js";
 import {
-  createPost,
-  deletePost,
-  getPosts,
-  updatePost,
+  create,
+  deletepost,
+  getposts,
+  updatepost,
 } from "../Controllers/PostController.js";
+import {verifyToken} from "../MiddleWare/authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/createPost/:userId", verifyToken, createPost);
-router.get("/getPost", getPosts);
-router.delete("/deletePost/:postId/:userId", verifyToken, deletePost);
-router.put("/UpdatePost/:postId/:userId", verifyToken, updatePost);
+router.post("/create", verifyToken, create);
+router.get("/getposts", getposts);
+router.delete("/deletepost/:postId/:userId", verifyToken, deletepost);
+router.put("/updatepost/:postId/:userId", verifyToken, updatepost);
 
 export default router;

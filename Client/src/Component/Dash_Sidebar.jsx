@@ -9,7 +9,6 @@ import {
   HiAnnotation,
   HiChartPie,
   HiHome,
-  HiOutlinePlus,
 } from "react-icons/hi";
 import {useDispatch, useSelector} from "react-redux";
 import {Logout} from "../../redux/user/userSlice";
@@ -91,27 +90,17 @@ function DashSideBar() {
             </Link>
           )}
           {currentUser.isAdmin && (
-            <Link to="/dashboard?tab=Feedback">
+            <Link to="/dashboard?tab=DashFeedback">
               <SidebarItem
-                active={tab === "Feedback"}
+                active={tab === "DashFeedback"}
                 as="div"
                 icon={HiAnnotation}
               >
-                feedback
+                Feedback
               </SidebarItem>
             </Link>
           )}
-          {currentUser.isAdmin && (
-            <Link to="/Dashboard?tab=CreatePost">
-              <SidebarItem
-                active={tab === "CreatePost"}
-                as="div"
-                icon={HiOutlinePlus}
-              >
-                Create Post
-              </SidebarItem>
-            </Link>
-          )}
+
           {currentUser.isAdmin && (
             <Link to="/?tab=Home">
               <SidebarItem active={tab === "Home"} as="div" icon={HiHome}>

@@ -12,7 +12,7 @@ export default function Feedback({feedback, onEdit, onDelete}) {
   useEffect(() => {
     const getUser = async () => {
       try {
-        const res = await fetch(`/Server/user/${feedback.userId}`);
+        const res = await fetch(`/Server/auth/${feedback.userId}`);
         const data = await res.json();
         if (res.ok) {
           setUser(data);

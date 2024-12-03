@@ -3,11 +3,12 @@ import {useState} from "react";
 import {useSelector} from "react-redux";
 import {Link} from "react-router-dom";
 
-function FeedbackSection(ServiceId) {
+function FeedbackSection() {
   const {currentUser} = useSelector((state) => state.user);
   const [feedback, setFeedback] = useState("");
   const [FeedbacktError, setFeedbackError] = useState(null);
 
+  // In the handleSubmit function:
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (feedback.length > 500) {
@@ -17,6 +18,7 @@ function FeedbackSection(ServiceId) {
 
     if (!currentUser?._id) {
       setFeedbackError("Please login to give feedback");
+      return;
     }
 
     try {
@@ -26,9 +28,8 @@ function FeedbackSection(ServiceId) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          feedback: feedback,
+          feedback,
           userId: currentUser._id,
-          ServiceId,
         }),
       });
       const data = await res.json();
@@ -39,7 +40,7 @@ function FeedbackSection(ServiceId) {
         setFeedbackError(data.message || "Failed to submit feedback");
       }
     } catch (error) {
-      setFeedbackError(error.message || "an error occurred");
+      setFeedbackError(error.message || "An error occurred");
     }
   };
 

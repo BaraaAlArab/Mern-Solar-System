@@ -14,31 +14,22 @@ export default function DashUsers() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await fetch(`/Server/auth/getUsers`, {
-          method: "GET",
-          cache: "no-store", // Bypass cache
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const res = await fetch(`/Server/auth/getUsers`);
         const data = await res.json();
         if (res.ok) {
           setUsers(data.users);
           if (data.users.length < 9) {
             setShowMore(false);
           }
-        } else {
-          console.error(data.message);
         }
       } catch (error) {
-        console.error("Error fetching users:", error.message);
+        console.log(error.message);
       }
     };
-
     if (currentUser.isAdmin) {
       fetchUsers();
     }
-  }, [currentUser.isAdmin, currentUser._id]); // Added currentUser.isAdmin to dependencies
+  }, [currentUser._id]);
 
   const handleShowMore = async () => {
     const startIndex = users.length;
@@ -47,7 +38,6 @@ export default function DashUsers() {
         `/Server/auth/getUsers?startIndex=${startIndex}`,
         {
           method: "GET",
-          cache: "no-store", // Bypass cache
           headers: {
             "Content-Type": "application/json",
           },
@@ -71,7 +61,7 @@ export default function DashUsers() {
     try {
       const res = await fetch(`/Server/auth/delete/${userIdToDelete}`, {
         method: "DELETE",
-        cache: "no-store", // Bypass cache
+        cache: "no-store",
         headers: {
           "Content-Type": "application/json",
         },
@@ -112,7 +102,7 @@ export default function DashUsers() {
                   </Table.Cell>
                   <Table.Cell>
                     <img
-                      src={user.profilePicture || "/default-profile.png"} // Fallback image
+                      src={user.profilePicture || "/default-profile.png"}
                       alt={user.username}
                       className="w-10 h-10 object-cover bg-gray-500 rounded-full"
                     />
@@ -153,6 +143,7 @@ export default function DashUsers() {
       ) : (
         <p className="text-center text-gray-500">You have no users yet!</p>
       )}
+
       <Modal
         show={showModal}
         onClose={() => setShowModal(false)}

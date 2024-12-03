@@ -1,143 +1,115 @@
+import {Button, Spinner} from "flowbite-react";
 import {useEffect, useState} from "react";
 import {Link, useParams} from "react-router-dom";
-import CallToAction from "../Component/CallToAction";
-import FeedbackSection from "../Component/FeedbackSection";
-import {Button, Spinner} from "flowbite-react";
 
 export default function PostPage() {
   const {postSlug} = useParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [post, setPost] = useState(null);
-  const [recentPosts, setRecentPosts] = useState([]);
+  const [recentPosts, setRecentPosts] = useState(null);
+  const [cart, setCart] = useState(
+    JSON.parse(localStorage.getItem("cart")) || [],
+  );
 
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const res = await fetch(`/Server/post/getPost?slug=${postSlug}`);
+        setLoading(true);
+        const res = await fetch(`/Server/post/getposts?slug=${postSlug}`);
         const data = await res.json();
-
-        if (!res.ok || !data.post || data.post.length === 0) {
+        if (!res.ok) {
           setError(true);
           setLoading(false);
           return;
         }
-
-        setPost(data.post[0]);
+        setPost(data.posts[0]);
+        setLoading(false);
         setError(false);
       } catch (error) {
         setError(true);
-        console.log(error.message);
-      } finally {
         setLoading(false);
       }
     };
-
     fetchPost();
   }, [postSlug]);
 
   useEffect(() => {
-    const fetchRecentPosts = async () => {
-      try {
-        const res = await fetch(`/Server/post/getPost?limit=3`);
+    try {
+      const fetchRecentPosts = async () => {
+        const res = await fetch(`/Server/post/getposts?limit=3`);
         const data = await res.json();
-        if (res.ok && data.posts) {
+        if (res.ok) {
           setRecentPosts(data.posts);
         }
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
-
-    fetchRecentPosts();
+      };
+      fetchRecentPosts();
+    } catch (error) {
+      console.log(error.message);
+    }
   }, []);
 
-  if (loading) {
+  const handleAddToCart = () => {
+    if (post) {
+      const newCart = [...cart, post];
+      setCart(newCart);
+      localStorage.setItem("cart", JSON.stringify(newCart));
+    }
+  };
+
+  if (loading)
     return (
       <div className="flex justify-center items-center min-h-screen">
         <Spinner size="xl" />
       </div>
     );
-  }
-
-  if (error) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <h2 className="text-2xl font-semibold text-red-500">
-          Failed to load post.
-        </h2>
-      </div>
-    );
-  }
 
   return (
-    <main className="p-3 flex flex-col max-w-6xl mx-auto min-h-screen">
-      <h1 className="text-3xl mt-10 p-3 text-center font-sans mx-auto lg:text-4xl">
-        {post?.title}
-      </h1>
-      <Link
-        to={`/search?category=${post?.category}`}
-        className="self-center mt-5 text-lg text-gray-600 hover:text-gray-900"
-      >
-        <Button color="blue-900" pill size="xs">
-          {post?.category}
-        </Button>
-      </Link>
-      <img
-        src={post?.image || "/path-to-default-image.jpg"}
-        alt={post?.title}
-        className="mt-10 p-3 max-h-[600px] w-full object-cover"
-      />
-      <div className="flex justify-between p-3 border-b border-slate-500 mx-auto w-full max-w-2xl text-xs">
-        <span>
-          {post?.createdAt && new Date(post.createdAt).toLocaleDateString()}
-        </span>
-      </div>
-      <span className="italic">
-        {post?.content
-          ? `${(post.content.length / 1000).toFixed(0)} mins read`
-          : "Loading..."}
-      </span>
+    <main className="p-6 max-w-6xl mx-auto min-h-screen grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Left Side: Post Description and Button */}
+      <section className="space-y-6">
+        <h1 className="text-4xl font-bold text-gray-800 leading-snug">
+          {post && post.title}
+        </h1>
 
-      <div
-        className="p-3 max-w-2xl mx-auto w-full post-content"
-        dangerouslySetInnerHTML={{__html: post?.content || ""}}
-      ></div>
+        <Link to={`/SearchPage?category=${post && post.category}`}>
+          <Button color="gray" pill size="sm">
+            {post && post.category}
+          </Button>
+        </Link>
 
-      {/* Recent Posts Section */}
-      <div className="mt-10">
-        <h2 className="text-2xl font-bold">Recent Posts</h2>
-        <div className="flex flex-col gap-4 mt-5">
-          {recentPosts && recentPosts.length > 0 ? (
-            recentPosts.map((recentPost) => (
-              <div
-                key={recentPost._id}
-                className="border p-3 rounded-lg shadow-md"
-              >
-                <Link
-                  to={`/post/${recentPost.slug}`}
-                  className="text-lg font-semibold hover:underline"
-                >
-                  {recentPost.title}
-                </Link>
-                <p className="text-gray-600">
-                  {recentPost.excerpt || recentPost.content.slice(0, 100)}...
-                </p>
-                <span className="text-sm text-gray-500">
-                  {new Date(recentPost.createdAt).toLocaleDateString()}
-                </span>
-              </div>
-            ))
-          ) : (
-            <p>No recent posts available.</p>
-          )}
+        <div className="flex justify-between text-sm text-gray-500 border-t pt-4">
+          <span>{post && new Date(post.createdAt).toLocaleDateString()}</span>
+          <span>
+            Estimated Read:{" "}
+            <strong>
+              {post && (post.content.length / 1000).toFixed(0)} mins
+            </strong>
+          </span>
         </div>
-      </div>
 
-      <div className="max-w-4xl mx-auto w-full">
-        <CallToAction />
-      </div>
-      <FeedbackSection postId={post?._id} />
+        <div
+          className="prose prose-lg text-gray-700"
+          dangerouslySetInnerHTML={{__html: post && post.content}}
+        ></div>
+
+        <div className="mt-4">
+          <Button onClick={handleAddToCart} color="purple" pill size="lg">
+            Add to Cart
+          </Button>
+        </div>
+      </section>
+
+      {/* Right Side: Image */}
+      <aside className="flex justify-center items-center">
+        <div className="w-80 h-80 overflow-hidden rounded-lg shadow-md">
+          <img
+            src={post && post.image}
+            alt={post && post.title}
+            className="w-full h-full object-cover"
+          />
+        </div>
+      </aside>
     </main>
   );
 }
