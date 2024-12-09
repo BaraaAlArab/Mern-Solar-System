@@ -83,6 +83,11 @@ export default function Header() {
               About
             </Button>
           </Link>
+          <Link to="/Cart_Index">
+            <Button color="light" gradientMonochrome="info">
+              cart
+            </Button>
+          </Link>
           {currentUser ? (
             <Dropdown
               arrowIcon={false}
