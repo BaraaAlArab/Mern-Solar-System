@@ -1,31 +1,35 @@
+import {useSelector} from "react-redux";
 import {Link} from "react-router-dom";
 import axios from "axios";
 import {toast} from "react-toastify";
-import "react-toastify/dist/ReactToastify.css"; // Import the CSS file for styling
+import "react-toastify/dist/ReactToastify.css";
 
 export default function PostCard({post}) {
+  const currentUser = useSelector((state) => state.user.currentUser); // Access user state
+
   const addToCart = async () => {
+    if (!currentUser) {
+      toast.error("You must be logged in to add items to the cart!");
+      return;
+    }
+
     try {
-      // Replace with actual user ID from authentication context
-      const userId = "your-authenticated-user-id";
+      const userId = currentUser._id; // Assuming currentUser has an _id field
+      const quantity = 1;
 
       const response = await axios.post(
         "http://localhost:3001/Server/Cart/add",
         {
-          userId,
-          productId: post.id, // Assuming `post.id` is the product identifier
-          title: post.title,
-          price: post.price, // Include product price if applicable
-          image: post.image, // Optional: image for cart preview
+          userId, 
+          productId: post._id, 
+          quantity, 
         },
-        {withCredentials: true}, // Send cookies (if required for authentication)
+        {withCredentials: true},
       );
 
       if (response.status === 200) {
-        // Show success toast
         toast.success("Added to the cart!");
       } else {
-        // Show failure toast
         toast.error("Did not add to cart. Please try again.");
       }
     } catch (error) {
@@ -52,7 +56,6 @@ export default function PostCard({post}) {
         >
           Read article
         </Link>
-        {/* Add to Cart Button */}
         <button
           onClick={addToCart}
           className="mt-3 py-2 px-4 bg-teal-500 text-white rounded-md hover:bg-teal-600 transition duration-300"

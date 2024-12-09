@@ -5,7 +5,7 @@ import {Avatar, Button, Dropdown, Navbar, TextInput} from "flowbite-react";
 import {Logout} from "../../redux/user/userSlice";
 import {useSelector, useDispatch} from "react-redux";
 import {useEffect, useState} from "react";
-import {AiOutlineSearch, AiOutlineMenu} from "react-icons/ai";
+import {AiOutlineSearch} from "react-icons/ai";
 import {FiHome, FiUser, FiLogOut, FiSettings} from "react-icons/fi";
 
 export default function Header() {

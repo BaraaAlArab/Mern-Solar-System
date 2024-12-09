@@ -18,11 +18,11 @@ import StorePage from "./Component/StorePage";
 import CreatePost from "./pages/CreatePost";
 import FeedbackSection from "./Component/FeedbackSection";
 import Cart_Index from "./pages/Shop/Cart/Cart_Index";
+
 function App() {
   return (
     <>
       <div>
-        {/* Your other components */}
         <ToastContainer />
       </div>
       <BrowserRouter>
