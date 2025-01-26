@@ -25,7 +25,7 @@ function App() {
       <div>
         <ToastContainer />
       </div>
-      <BrowserRouter>
+      <BrowserRouter basename="/Mern-Solar-System">
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<Home />} />
