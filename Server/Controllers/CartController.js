@@ -1,7 +1,6 @@
 import Post from "../models/Post.js";
 import Cart from "../models/Shop/Cart.js";
 
-
 export const addToCart = async (req, res) => {
   try {
     const {userId, productId, Price, content, title, quantity} = req.body;
@@ -63,6 +62,12 @@ export const fetchCartItems = async (req, res) => {
   try {
     const {userId} = req.params;
 
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        message: "User ID is required..!",
+      });
+    }
     const cart = await Cart.findOne({userId}).populate({
       path: "items.productId",
       select: "image title Price", // Removed salePrice

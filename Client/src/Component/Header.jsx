@@ -1,12 +1,10 @@
-// Header.js
-
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import {Avatar, Button, Dropdown, Navbar, TextInput} from "flowbite-react";
 import {Logout} from "../../redux/user/userSlice";
 import {useSelector, useDispatch} from "react-redux";
 import {useEffect, useState} from "react";
 import {AiOutlineSearch} from "react-icons/ai";
-import {FiHome, FiUser, FiLogOut, FiSettings} from "react-icons/fi";
+import {FiHome, FiUser, FiLogOut, FiShoppingCart} from "react-icons/fi";
 
 export default function Header() {
   const dispatch = useDispatch();
@@ -85,7 +83,7 @@ export default function Header() {
           </Link>
           <Link to="/Cart_Index">
             <Button color="light" gradientMonochrome="info">
-              cart
+              Cart
             </Button>
           </Link>
           {currentUser ? (
@@ -112,9 +110,6 @@ export default function Header() {
               <Dropdown.Item as={Link} to="/Dashboard?tab=DashProfile">
                 <FiUser className="mr-2 " /> Profile
               </Dropdown.Item>
-              <Dropdown.Item as={Link} to="/Settings">
-                <FiSettings className="mr-2 " /> Settings
-              </Dropdown.Item>
               <Dropdown.Divider />
               <Dropdown.Item onClick={handleLogout}>
                 <FiLogOut className="mr-2" /> Sign Out
@@ -136,9 +131,22 @@ export default function Header() {
         />
       </div>
       <Navbar.Collapse
-        className={`${isMenuOpen ? "block" : "hidden"} lg:hidden`}
+        className={`${
+          isMenuOpen ? "block" : "hidden"
+        } lg:hidden bg-blue-600 text-white`}
       >
-        <ul className="flex flex-col p-4 mt-4 border border-gray-100 rounded-lg bg-gray-50">
+        <form onSubmit={handleSubmit} className="relative mb-4">
+          <AiOutlineSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-200" />
+          <TextInput
+            type="text"
+            placeholder="Search..."
+            className="pl-10 pr-4 py-2 bg-white shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300 rounded-full w-full text-black"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            aria-label="Search"
+          />
+        </form>
+        <ul className="flex flex-col space-y-2">
           <li>
             <Link
               to="/"
@@ -158,7 +166,7 @@ export default function Header() {
               }`}
               onClick={() => setIsMenuOpen(false)}
             >
-              <FiUser className="mr-2" /> About
+              About
             </Link>
           </li>
           <li>
@@ -174,13 +182,11 @@ export default function Header() {
           </li>
           <li>
             <Link
-              to="/Contact"
-              className={`flex items-center px-3 py-2 rounded-md text-base font-medium text-white hover:bg-blue-700 ${
-                location.pathname === "/Contact" ? "bg-blue-700" : ""
-              }`}
+              to="/Cart_Index"
+              className="flex items-center px-3 py-2 rounded-md text-base font-medium text-white hover:bg-blue-700"
               onClick={() => setIsMenuOpen(false)}
             >
-              Contact
+              <FiShoppingCart className="mr-2" /> Cart
             </Link>
           </li>
           {!currentUser && (

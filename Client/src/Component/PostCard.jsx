@@ -20,9 +20,12 @@ export default function PostCard({post}) {
       const response = await axios.post(
         "http://localhost:3001/Server/Cart/add",
         {
-          userId, 
-          productId: post._id, 
-          quantity, 
+          userId,
+          productId: post._id,
+          quantity,
+          Price: post.Price, // Assuming `Price` is part of `post`
+          content: post.content, // Assuming `content` is part of `post`
+          title: post.title,
         },
         {withCredentials: true},
       );

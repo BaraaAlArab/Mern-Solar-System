@@ -1,4 +1,5 @@
 import {useEffect, useState} from "react";
+
 import {Link} from "react-router-dom";
 import axios from "axios";
 
@@ -17,7 +18,7 @@ const CartPage = () => {
     };
 
     fetchCartItems();
-  }, []);
+  }, [cartItems]);
 
   const calculateTotal = () => {
     return cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
@@ -26,7 +27,7 @@ const CartPage = () => {
   const handleRemoveItem = async (productId) => {
     try {
       await axios.delete(`/Server/Cart/${userId}/${productId}`);
-      setCartItems(cartItems.filter((item) => item.id !== productId)); // Update state after removal
+      setCartItems(cartItems.filter((item) => item.id !== productId));
     } catch (error) {
       console.error("Error removing item", error);
     }
@@ -35,6 +36,7 @@ const CartPage = () => {
   const handleUpdateQuantity = async (productId, newQuantity) => {
     try {
       await axios.put(`/Server/Cart/update-cart`, {
+        userId,
         productId,
         quantity: newQuantity,
       });
@@ -50,7 +52,6 @@ const CartPage = () => {
   return (
     <div className="container mx-auto py-8">
       <h2 className="text-3xl font-semibold mb-6">Your Cart</h2>
-
       {cartItems.length === 0 ? (
         <div className="text-center text-xl text-gray-500">
           <p>Your cart is empty.</p>
@@ -112,7 +113,6 @@ const CartPage = () => {
               </div>
             ))}
           </div>
-
           <div className="flex justify-between items-center mt-8 bg-white p-4 rounded-lg shadow-lg">
             <div>
               <Link

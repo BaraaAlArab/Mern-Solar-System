@@ -10,6 +10,7 @@ const postSchema = new mongoose.Schema(
     },
     Price: {
       type: Number,
+      required: true,
     },
     content: {
       type: String,
