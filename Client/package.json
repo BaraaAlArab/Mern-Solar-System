@@ -2,6 +2,7 @@
   "name": "solaries",
   "private": true,
   "version": "0.0.0",
+  "homepage": "https://baraaalarab.github.io/Mern-Solar-System/",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,7 +10,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build",
-  "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.1.1",
