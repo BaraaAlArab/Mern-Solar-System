@@ -1,6 +1,6 @@
 import "./index.css";
-import {BrowserRouter, Route, Routes} from "react-router-dom";
-import {ToastContainer} from "react-toastify";
+import { HashRouter, Route, Routes } from "react-router-dom"; // Import HashRouter
+import { ToastContainer } from "react-toastify";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
@@ -25,7 +25,7 @@ function App() {
       <div>
         <ToastContainer />
       </div>
-      <BrowserRouter basename="/Mern-Solar-System">
+      <HashRouter> {/* Switch to HashRouter */}
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<Home />} />
@@ -47,7 +47,7 @@ function App() {
           <Route path="/post/:postSlug" element={<PostPage />} />
           <Route path="/FeedbackSection" element={<FeedbackSection />} />
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </>
   );
 }
