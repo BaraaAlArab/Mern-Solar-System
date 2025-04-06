@@ -23,7 +23,7 @@ export default function PostCard({post}) {
           userId,
           productId: post._id,
           quantity,
-          Price: post.Price, // Assuming `Price` is part of `post`
+          price: post.Price, // Assuming `Price` is part of `post`
           content: post.content, // Assuming `content` is part of `post`
           title: post.title,
         },

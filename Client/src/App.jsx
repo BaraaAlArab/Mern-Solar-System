@@ -1,6 +1,6 @@
 import "./index.css";
-import { HashRouter, Route, Routes } from "react-router-dom"; // Import HashRouter
-import { ToastContainer } from "react-toastify";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {ToastContainer} from "react-toastify";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
@@ -18,6 +18,8 @@ import StorePage from "./Component/StorePage";
 import CreatePost from "./pages/CreatePost";
 import FeedbackSection from "./Component/FeedbackSection";
 import Cart_Index from "./pages/Shop/Cart/Cart_Index";
+import UserCartItemsContent from "./Component/Shopping_View/Cart_Item_content";
+import Cartitem from "./Component/Shopping_View/CartItem";
 
 function App() {
   return (
@@ -25,7 +27,7 @@ function App() {
       <div>
         <ToastContainer />
       </div>
-      <HashRouter> {/* Switch to HashRouter */}
+      <BrowserRouter>
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<Home />} />
@@ -36,6 +38,8 @@ function App() {
           <Route path="/order" element={<Order />} />
           <Route path="/Search" element={<Search />} />
           <Route path="/Cart_Index" element={<Cart_Index />} />
+          <Route path="/UserCartItemsContent"element={<UserCartItemsContent/>}/>
+          <Route path="/Cartitem"element={<Cartitem/>}/>
           <Route element={<PrivateRoute />}>
             <Route path="/Dashboard" element={<Dashboard />} />
           </Route>
@@ -47,7 +51,7 @@ function App() {
           <Route path="/post/:postSlug" element={<PostPage />} />
           <Route path="/FeedbackSection" element={<FeedbackSection />} />
         </Routes>
-      </HashRouter>
+      </BrowserRouter>
     </>
   );
 }

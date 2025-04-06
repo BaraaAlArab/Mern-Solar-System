@@ -8,7 +8,7 @@ const postSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    Price: {
+    price: {
       type: Number,
       required: true,
     },

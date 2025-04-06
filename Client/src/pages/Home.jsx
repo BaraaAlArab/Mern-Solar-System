@@ -1,9 +1,8 @@
-
 import {useState, useEffect} from "react";
 import Header from "../Component/Header";
 import Footer from "../Component/Footer";
 import {Link} from "react-router-dom";
-import {Carousel, Button, Modal} from "flowbite-react"; 
+import {Carousel, Button, Modal} from "flowbite-react";
 import {FiShoppingCart, FiSearch, FiUser} from "react-icons/fi";
 import PostCard from "../Component/PostCard";
 
@@ -51,10 +50,7 @@ function Services() {
 
   return (
     <>
-      
       <Header className="shadow-md mb-8" />
-
-      
       <section className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-20">
         <div className="container mx-auto text-center px-4">
           <h1 className="text-4xl md:text-6xl font-bold mb-4">
@@ -75,7 +71,6 @@ function Services() {
           </Link>
         </div>
       </section>
-
       {/* Main Container */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Advanced Carousel Section */}
@@ -118,7 +113,6 @@ function Services() {
                 />
                 {/* Overlay on Hover */}
                 <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center space-y-4">
-                
                   <Link
                     to="/search"
                     className="bg-white text-blue-600 px-4 py-2 rounded-full flex items-center space-x-2 transform hover:scale-110 transition-transform duration-300"
@@ -192,7 +186,6 @@ function Services() {
           </Modal.Footer>
         </Modal>
       </div>
-
       {/* Footer Enhancement */}
       <Footer className="bg-gray-800 text-white py-8">
         <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
